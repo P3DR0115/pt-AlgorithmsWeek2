@@ -8,7 +8,9 @@ namespace pt_AlgorithmsWeek2
 {
     public class DataSet
     {
+        public int place; // place of original
         public Guid ID;
-        public Double decimalValue;
+        public Double decimalValue; // the 0.xxxxxxxxx value
+        public string NormalValue; // the base 10 value
     }
 }

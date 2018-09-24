@@ -20,8 +20,9 @@ namespace pt_AlgorithmsWeek2
         static void globallyUniqueIdentifier()
         {
             List<DataSet> data = new List<DataSet>(); // The Original
-            DataSet[] data2; // A copy to sort
+            DataSet[] data2 = new DataSet[1000000]; // A copy to sort
             DataSet[] data3 = new DataSet[1000000]; // Another copy to sort
+            DataSet[] data4 = new DataSet[1000000]; // Another copy to sort
             string[] dataTemp = new string[1000000]; // A string copy that can be used to read/ write
 
             Random rnd = new Random(); // This is the random number
@@ -39,15 +40,18 @@ namespace pt_AlgorithmsWeek2
             {
                 loadFile(data, dataTemp);
 
-                /*
+                
                 for(int i = 0; i < 1000000; i++)
                 {
-                    data.Add(data2[i]);
-                }*/
+                    data2[i] = data[i];
+                    data3[i] = data[i];
+                }
 
-                //mergeSort(data2, data3, data2.Length);
+                //data2 = data.ToArray();
+                //data3 = data.ToArray();
+
+                mergeSort(data2, data3, data2.Length);
                 //bubbleSort(data2, data3, data2.Length);
-                data2 = data.ToArray();
             }
             catch (Exception e)
             {
@@ -61,6 +65,7 @@ namespace pt_AlgorithmsWeek2
                     temp = "0.";
                     temp += thirdElement.ToString();
 
+                    tempZ.place = firstElement;
                     tempZ.decimalValue = 0;
                     tempZ.ID = Guid.NewGuid();
 
@@ -85,25 +90,35 @@ namespace pt_AlgorithmsWeek2
                 } // for loop end
 
 
-                data2 = data.ToArray();
+                for (int i = 0; i < 1000000; i++)
+                {
+                    data2[i] = data[i];
+                    //data2[i].decimalValue = data[i].decimalValue;
+
+
+                    data3[i] = data[i];
+                    //data3[i].decimalValue = data[i].decimalValue;
+                }
+
+                //data2 = data.ToArray();
                 Console.WriteLine("Done Making Numbers!");
                 SaveFile(data2, dataTemp);
 
             } // Catch
 
             data2 = data.ToArray();
-            data3 = data2;
+            data3 = data.ToArray();
             //SaveFile(data2, dataTemp);
 
             //data3 = data2;
 
             //insertionSort(data);
 
-            //mergeSort(data2, data3, data2.Length);
-            bubbleSort(data2, data3, data2.Length);
+            data4 = mergeSort(data2, data3, data2.Length);
+            //bubbleSort(data2, data3, data2.Length);
 
             
-            SaveFileBubble(data2, dataTemp);
+            SaveFileMerge(data4, dataTemp);
         } // Function()
 
         static void insertionPrototype()
@@ -178,9 +193,13 @@ namespace pt_AlgorithmsWeek2
 
             for(int i = 0; i < data2.Length; i++)
             {
+                tempString = Convert.ToString(data2[i].place);
+                tempString += ", ";
                 tempString = Convert.ToString(data2[i].ID);
                 tempString += ", ";
                 tempString += Convert.ToString(data2[i].decimalValue);
+                tempString += ", ";
+                tempString = Convert.ToString(data2[i].NormalValue);
                 dataTemp[i] = tempString;
             }
 
@@ -188,20 +207,24 @@ namespace pt_AlgorithmsWeek2
             Console.WriteLine("Done Saving to File");
         }
 
-        static void SaveFileBubble(DataSet[] data2, string[] dataTemp)
+        static void SaveFileMerge(DataSet[] data2, string[] dataTemp)
         {
             string tempString;
 
             for (int i = 0; i < data2.Length; i++)
             {
+                tempString = Convert.ToString(data2[i].place);
+                tempString += ", ";
                 tempString = Convert.ToString(data2[i].ID);
                 tempString += ", ";
                 tempString += Convert.ToString(data2[i].decimalValue);
+                tempString += ", ";
+                tempString += Convert.ToString(data2[i].NormalValue);
                 dataTemp[i] = tempString;
             }
 
-            System.IO.File.WriteAllLines(@"C:\Users\P3dro\source\repos\Algorithms\pt-AlgorithmsWeek2\dataBubbleSort.csv", dataTemp);
-            Console.WriteLine("Done Saving to File (Bubble Sorted)");
+            System.IO.File.WriteAllLines(@"C:\Users\P3dro\source\repos\Algorithms\pt-AlgorithmsWeek2\dataMergeSort1.csv", dataTemp);
+            Console.WriteLine("Done Saving to File (Merge Sorted)");
         }
 
         static List<DataSet> loadFile(List<DataSet>data, string[] dataTemp)
@@ -245,7 +268,7 @@ namespace pt_AlgorithmsWeek2
             byte[] bit;
             bool sorted = true;
 
-            do // Bubble Sort
+            do // Sort
             {
                 if(iterations%5 == 0 || iterations == 1)
                     Console.WriteLine("Iteration: " + iterations);
@@ -316,14 +339,16 @@ namespace pt_AlgorithmsWeek2
 
 
         //I used https://en.wikipedia.org/wiki/Merge_sort for help with the merge sort
-        static void mergeSort(string[] nums1, string[] nums2, int length) 
+        static DataSet[] mergeSort(DataSet[] nums1, DataSet[] nums2, int length) 
         {
             copyTheArray(nums1, 0, length, nums2);
             splitMerge(nums2, 0, length, nums1);
-            System.IO.File.WriteAllLines(@"C:\Users\P3dro\source\repos\Algorithms\pt-AlgorithmsWeek2\dataMergeSort.csv", nums1);
+
+            //System.IO.File.WriteAllLines(@"C:\Users\P3dro\source\repos\Algorithms\pt-AlgorithmsWeek2\dataMergeSort.csv", nums2);
+            return nums2;
         }
 
-        static void copyTheArray(string[] iA, int iStart, int iStop, string[] iB)
+        static void copyTheArray(DataSet[] iA, int iStart, int iStop, DataSet[] iB)
         {
             for(int j = iStart; j < iStop; j++)
             {
@@ -331,7 +356,7 @@ namespace pt_AlgorithmsWeek2
             }
         }
 
-        static void splitMerge(string[] nums2, int iStart, int iStop, string[] nums1)
+        static void splitMerge(DataSet[] nums2, int iStart, int iStop, DataSet[] nums1)
         {
             if(iStop - iStart < 2)
                 return;
@@ -344,59 +369,85 @@ namespace pt_AlgorithmsWeek2
 
         }
 
-        static void topMerge(string[] nums1, int iStart, int iMiddle, int iStop, string[] nums2)
+        static void topMerge(DataSet[] nums1, int iStart, int iMiddle, int iStop, DataSet[] nums2)
         {
             int i = iStart;
             int j = iMiddle;
 
-            //char[] nums1Char;
-            //char[] nums2Char;
-            uint num1;
-            uint num2;
-
-            //bool lessThan = false;
-
+            decimal hex1 = 0; // Will be used to compare values
+            decimal hex2 = 0;
+            string tmp1;
+            string tmp2;
+            string tmp3 = "";
+            string half = "";
+            byte[] bit;
+            byte[] bit2;
+            bool sorted = true;
             
+            Decimal num1;
+            Decimal num2;
 
-            for(int k = iStart; k < iStart; k++)
+            bool swap = false;
+
+            for(int k = iStart; k < iStop; k++)
             {
-                num1 = uint.Parse(nums1[k], System.Globalization.NumberStyles.AllowHexSpecifier);
-                num2 = uint.Parse(nums1[k+1], System.Globalization.NumberStyles.AllowHexSpecifier);
+                //num1 = uint.Parse(nums1[k], System.Globalization.NumberStyles.AllowHexSpecifier);
+                //num2 = uint.Parse(nums1[k+1], System.Globalization.NumberStyles.AllowHexSpecifier);
+                tmp3 = "";
+                swap = false;
+                    
+                bit = nums1[k].ID.ToByteArray();
 
-                /*if (num1 < num2)
-                {
-                    lessThan = true;
-                }
+                if(k < 999999)
+                    bit2 = nums1[k+1].ID.ToByteArray();
                 else
-                    lessThan = false;*/
+                    bit2 = nums1[k -1 ].ID.ToByteArray();
+                
+                
+                //nums1[k].NormalValue = Convert.ToDecimal(tmp3);
 
-                //nums1Char = nums1[i].ToCharArray();
-                //nums2Char = nums1[j].ToCharArray();
-
-                /*for(int a = 0; a < nums1Char.Length; a++)
+                for (int q = 0; q < (bit.Length); q++)
                 {
-                    if((nums1Char[a]) <= nums2Char[a] && a > 0)
+                    tmp3 += bit[q];
+                    if(bit2[q] < bit[q])
                     {
-                        // nums1 is still before nums2
-                        lessThan = true;
+                        swap = true;
                     }
-                    else
-                    {
-                        // nums1 is no longer less than nums 2
-                        lessThan = false;
+                }
 
-                        if(a != 0)
-                        {
-                            //lessThan = true;
-                        }
+                //nums1[k].NormalValue = Convert.ToDecimal(tmp3);
+                nums1[k].NormalValue = tmp3;
+                /*
+                tmp1 = half;
+                half = "";
+                tmp3 = String.Format(tmp1);
+                num1 = Convert.ToDecimal(tmp3);
 
-                    }
-                }                
-            */
+                nums1[k].NormalValue = num1; 
+
+                try
+                {
+                    bit = nums1[k + 1].ID.ToByteArray();
+                }
+                catch (Exception e)
+                {
+                    // Hit end of the array
+                }
+
+                for (int q = 0; q < (bit.Length / 2); q++)
+                {
+                    half += Convert.ToString(bit[q]);
+                }
+
+                tmp2 = half;
+                half = "";
+                tmp3 = String.Format(tmp2);
+                num2 = Convert.ToDecimal(tmp3);*/
+
                 //if (i < iMiddle && (j >= iStop || lessThan))
-                if (i < iMiddle && (j >= iStop || num1 <= num2))
+                if (i < iMiddle && (j >= iStop || swap)) //|| num1 <= num2))
                 {
-                    nums2[k] = nums1[k];
+                    nums2[k] = nums1[i];
                     i += 1;
                 }
                 else
