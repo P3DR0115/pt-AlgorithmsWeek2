@@ -47,6 +47,14 @@ namespace pt_AlgorithmsWeek2
                     data3[i] = data[i];
                 }
 
+                determineDecimal(data2);
+
+                for (int i = 0; i < 1000000; i++)
+                {
+                    data3[i].NormalValue = data2[i].NormalValue;
+                }
+
+
                 //data2 = data.ToArray();
                 //data3 = data.ToArray();
 
@@ -101,7 +109,10 @@ namespace pt_AlgorithmsWeek2
                 }
 
                 //data2 = data.ToArray();
+
                 Console.WriteLine("Done Making Numbers!");
+                determineDecimal(data2);
+
                 SaveFile(data2, dataTemp);
 
             } // Catch
@@ -223,6 +234,7 @@ namespace pt_AlgorithmsWeek2
                 dataTemp[i] = tempString;
             }
 
+            System.IO.File.WriteAllLines(@"C:\Users\P3dro\source\repos\Algorithms\pt-AlgorithmsWeek2\data.csv", dataTemp);
             System.IO.File.WriteAllLines(@"C:\Users\P3dro\source\repos\Algorithms\pt-AlgorithmsWeek2\dataMergeSort1.csv", dataTemp);
             Console.WriteLine("Done Saving to File (Merge Sorted)");
         }
@@ -369,54 +381,140 @@ namespace pt_AlgorithmsWeek2
 
         }
 
+        static DataSet[] determineDecimal(DataSet[] data)
+        {
+            byte[] bit;
+            //byte[] bit2;
+            String tmp1 = "";
+            Decimal tmp2 = 0m;
+
+            for(int k = 0; k < data.Length; k++)
+            {
+                bit = data[k].ID.ToByteArray();
+
+                //nums1[k].NormalValue = Convert.ToDecimal(tmp3);
+                tmp1 = "";
+                tmp2 = 0m;
+
+                for (int q = 0; q < (bit.Length); q++)
+                {
+                    tmp1 = bit[q].ToString();
+                    //tmp1 += "-";
+                    tmp2 += Math.Truncate((Convert.ToDecimal(tmp1) / 1)); //- (Convert.ToDecimal(tmp1) % ));
+                }
+
+                data[k].NormalValue = tmp2;
+                //nums1[k].NormalValue = Convert.ToDecimal(tmp3);
+                //nums1[k].NormalValue = tmp3;  // USING THIS
+            }
+
+            
+            return data;
+        }
+
         static void topMerge(DataSet[] nums1, int iStart, int iMiddle, int iStop, DataSet[] nums2)
         {
             int i = iStart;
             int j = iMiddle;
 
-            decimal hex1 = 0; // Will be used to compare values
-            decimal hex2 = 0;
-            string tmp1;
-            string tmp2;
+            //decimal hex1 = 0; // Will be used to compare values
+            //decimal hex2 = 0;
+            //string tmp1;
+            //string tmp2;
+            string tmp2 = "";
             string tmp3 = "";
-            string half = "";
+            //string half = "";
             byte[] bit;
-            byte[] bit2;
-            bool sorted = true;
-            
-            Decimal num1;
-            Decimal num2;
+            Decimal[] bit1 = new Decimal[4];
+            Decimal[] bit2 = new Decimal[4];
+            //bool sorted = true;
 
-            bool swap = false;
+            //Decimal num1;
+            //Decimal num2;
 
-            for(int k = iStart; k < iStop; k++)
+            //bool swap = false;
+
+            for (int k = iStart; k < iStop; k++)
             {
-                //num1 = uint.Parse(nums1[k], System.Globalization.NumberStyles.AllowHexSpecifier);
-                //num2 = uint.Parse(nums1[k+1], System.Globalization.NumberStyles.AllowHexSpecifier);
+                tmp2 = "";
                 tmp3 = "";
-                swap = false;
-                    
+                //swap = false;
+
                 bit = nums1[k].ID.ToByteArray();
-
-                if(k < 999999)
-                    bit2 = nums1[k+1].ID.ToByteArray();
-                else
-                    bit2 = nums1[k -1 ].ID.ToByteArray();
                 
-                
-                //nums1[k].NormalValue = Convert.ToDecimal(tmp3);
-
-                for (int q = 0; q < (bit.Length); q++)
+                for(int h = 0; h < (bit.Length - 4); h++)
                 {
-                    tmp3 += bit[q];
-                    if(bit2[q] < bit[q])
+                    tmp2 += bit[h];
+                    tmp2 += bit[h + 1];
+                    tmp2 += bit[h + 2];
+                    tmp2 += bit[h + 3];
+
+                    if(h == 0)
+                        bit1[0] = Convert.ToDecimal(tmp2);
+                    else if (h == 4)
+                        bit1[1] = Convert.ToDecimal(tmp2);
+                    else if (h == 8)
+                        bit1[2] = Convert.ToDecimal(tmp2);
+                    else if (h == 12)
+                        bit1[0] = Convert.ToDecimal(tmp2);
+
+                    tmp2 = "";
+                    h += 3;
+                }
+                
+                if(k < 999999)
+                {
+                    bit = nums1[k+1].ID.ToByteArray();
+
+                    for (int h = 0; h < (bit.Length - 4); h++)
                     {
-                        swap = true;
+                        tmp2 += bit[h];
+                        tmp2 += bit[h + 1];
+                        tmp2 += bit[h + 2];
+                        tmp2 += bit[h + 3];
+
+                        if (h == 0)
+                            bit2[0] = Convert.ToDecimal(tmp2);
+                        else if (h == 4)
+                            bit2[1] = Convert.ToDecimal(tmp2);
+                        else if (h == 8)
+                            bit2[2] = Convert.ToDecimal(tmp2);
+                        else if (h == 12)
+                            bit2[0] = Convert.ToDecimal(tmp2);
+
+                        tmp2 = "";
+                        h += 3;
                     }
                 }
+                else
+                {
+                    // don't do anything
+                }
+
+                /*
+                if(k < 999999)
+                    bit2 = nums1[k].ID.ToByteArray();
+                else
+                    bit2 = nums1[k-1].ID.ToByteArray();*/
+
+                //bit2 = nums1[j].ID.ToByteArray();
+
 
                 //nums1[k].NormalValue = Convert.ToDecimal(tmp3);
-                nums1[k].NormalValue = tmp3;
+
+                /*
+                for (int q = 0; q < (bit1.Length); q++)
+                {
+                    tmp3 += bit[q];
+                    tmp3 += "-";
+                    if(bit2[q] < bit1[q])
+                    {
+                        //swap = true;
+                    }
+                } */
+
+                //nums1[k].NormalValue = Convert.ToDecimal(tmp3);
+                //nums1[k].NormalValue = tmp3;  // USING THIS
                 /*
                 tmp1 = half;
                 half = "";
@@ -445,7 +543,7 @@ namespace pt_AlgorithmsWeek2
                 num2 = Convert.ToDecimal(tmp3);*/
 
                 //if (i < iMiddle && (j >= iStop || lessThan))
-                if (i < iMiddle && (j >= iStop || swap)) //|| num1 <= num2))
+                if (i < iMiddle && (j >= iStop || nums1[i].NormalValue <= nums1[j].NormalValue)) //|| num1 <= num2))
                 {
                     nums2[k] = nums1[i];
                     i += 1;
