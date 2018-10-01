@@ -81,6 +81,7 @@ namespace pt_AlgorithmsWeek2
                     //tempZ.ID = secondElement;
 
                     data.Add(tempZ);
+                    data[firstElement].place = firstElement;
                     //data.Insert(firstElement, tempZ);
                     
 
@@ -111,7 +112,7 @@ namespace pt_AlgorithmsWeek2
                 //data2 = data.ToArray();
 
                 Console.WriteLine("Done Making Numbers!");
-                determineDecimal(data2);
+                //determineDecimal(data2);
 
                 SaveFile(data2, dataTemp);
 
@@ -119,17 +120,17 @@ namespace pt_AlgorithmsWeek2
 
             data2 = data.ToArray();
             data3 = data.ToArray();
-            //SaveFile(data2, dataTemp);
+            SaveFile(data2, dataTemp);
 
             //data3 = data2;
 
             //insertionSort(data);
 
-            data4 = mergeSort(data2, data3, data2.Length);
+            //data4 = mergeSort(data2, data3, data2.Length); // USE THIS
             //bubbleSort(data2, data3, data2.Length);
 
             
-            SaveFileMerge(data4, dataTemp);
+            //SaveFileMerge(data4, dataTemp); // USE THIS
         } // Function()
 
         static void insertionPrototype()
@@ -209,8 +210,6 @@ namespace pt_AlgorithmsWeek2
                 tempString = Convert.ToString(data2[i].ID);
                 tempString += ", ";
                 tempString += Convert.ToString(data2[i].decimalValue);
-                tempString += ", ";
-                tempString = Convert.ToString(data2[i].NormalValue);
                 dataTemp[i] = tempString;
             }
 
@@ -235,14 +234,16 @@ namespace pt_AlgorithmsWeek2
             }
 
             System.IO.File.WriteAllLines(@"C:\Users\P3dro\source\repos\Algorithms\pt-AlgorithmsWeek2\data.csv", dataTemp);
-            System.IO.File.WriteAllLines(@"C:\Users\P3dro\source\repos\Algorithms\pt-AlgorithmsWeek2\dataMergeSort1.csv", dataTemp);
+            System.IO.File.WriteAllLines(@"C:\Users\P3dro\source\repos\Algorithms\pt-AlgorithmsWeek2\dataMergeSort1TOAB.csv", dataTemp);
             Console.WriteLine("Done Saving to File (Merge Sorted)");
         }
 
         static List<DataSet> loadFile(List<DataSet>data, string[] dataTemp)
         {
 
-            dataTemp = System.IO.File.ReadAllLines(@"C:\Users\P3dro\source\repos\Algorithms\pt-AlgorithmsWeek2\data1.csv");
+            //dataTemp = System.IO.File.ReadAllLines(@"C:\Users\P3dro\source\repos\Algorithms\pt-AlgorithmsWeek2\data.csv");
+            dataTemp = System.IO.File.ReadAllLines(@"C:\Users\P3dro\source\repos\Algorithms\pt-AlgorithmsWeek2\TOAB.csv");
+            //dataTemp = System.IO.File.ReadAllLines(@"C:\Users\P3dro\source\repos\Algorithms\pt-AlgorithmsWeek2\ARLG.csv");
             Console.WriteLine("Load Complete!");
             string[] returnData = new string[1000000];
             string[] oneData;
@@ -255,7 +256,6 @@ namespace pt_AlgorithmsWeek2
 
                 if(oneData[0] != "")
                 {
-                    //String.Format("{0:X}", oneData[0])
                     g = new Guid(oneData[0]);
                     tempOne.ID = g;
                     tempOne.decimalValue = Convert.ToDouble(oneData[1]);
@@ -264,6 +264,7 @@ namespace pt_AlgorithmsWeek2
                 }
             }
 
+            Console.WriteLine("Done Loading the data from the file (and assigning to the data).");
             return data;
         }
 
@@ -387,21 +388,23 @@ namespace pt_AlgorithmsWeek2
             //byte[] bit2;
             String tmp1 = "";
             Decimal tmp2 = 0m;
-
+            
             for(int k = 0; k < data.Length; k++)
             {
+                if(data[k].ID.CompareTo(data[(k+1)].ID) < 0)
+
                 bit = data[k].ID.ToByteArray();
 
                 //nums1[k].NormalValue = Convert.ToDecimal(tmp3);
                 tmp1 = "";
                 tmp2 = 0m;
 
-                for (int q = 0; q < (bit.Length); q++)
+                /*for (int q = 0; q < (bit.Length); q++)
                 {
                     tmp1 = bit[q].ToString();
                     //tmp1 += "-";
                     tmp2 += Math.Truncate((Convert.ToDecimal(tmp1) / 1)); //- (Convert.ToDecimal(tmp1) % ));
-                }
+                }*/
 
                 data[k].NormalValue = tmp2;
                 //nums1[k].NormalValue = Convert.ToDecimal(tmp3);
@@ -421,12 +424,12 @@ namespace pt_AlgorithmsWeek2
             //decimal hex2 = 0;
             //string tmp1;
             //string tmp2;
-            string tmp2 = "";
-            string tmp3 = "";
+            //string tmp2 = "";
+            //string tmp3 = "";
             //string half = "";
-            byte[] bit;
-            Decimal[] bit1 = new Decimal[4];
-            Decimal[] bit2 = new Decimal[4];
+            //byte[] bit;
+            //Decimal[] bit1 = new Decimal[4];
+            //Decimal[] bit2 = new Decimal[4];
             //bool sorted = true;
 
             //Decimal num1;
@@ -436,11 +439,11 @@ namespace pt_AlgorithmsWeek2
 
             for (int k = iStart; k < iStop; k++)
             {
-                tmp2 = "";
-                tmp3 = "";
+                //tmp2 = "";
+                //tmp3 = "";
                 //swap = false;
 
-                bit = nums1[k].ID.ToByteArray();
+                /*bit = nums1[k].ID.ToByteArray();
                 
                 for(int h = 0; h < (bit.Length - 4); h++)
                 {
@@ -489,7 +492,7 @@ namespace pt_AlgorithmsWeek2
                 else
                 {
                     // don't do anything
-                }
+                }*/
 
                 /*
                 if(k < 999999)
@@ -543,7 +546,9 @@ namespace pt_AlgorithmsWeek2
                 num2 = Convert.ToDecimal(tmp3);*/
 
                 //if (i < iMiddle && (j >= iStop || lessThan))
-                if (i < iMiddle && (j >= iStop || nums1[i].NormalValue <= nums1[j].NormalValue)) //|| num1 <= num2))
+                //if (i < iMiddle && (j >= iStop || nums1[i].NormalValue <= nums1[j].NormalValue)) //|| num1 <= num2))
+
+                if (i < iMiddle && (j >= iStop || nums1[i].decimalValue.CompareTo(nums1[j].decimalValue) <= 0))
                 {
                     nums2[k] = nums1[i];
                     i += 1;
